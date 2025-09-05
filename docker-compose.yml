@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      dockerfile: ./docker-build/app/Dockerfile
+      context: ./
+    container_name: resumes
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres
+    container_name: resumes_db
+    restart: always
+    ports:
+      - "${DB_PORT}:5432"
+
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 3s
+      timeout: 3s
+      retries: 3
+
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:    
