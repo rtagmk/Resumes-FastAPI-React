@@ -1,0 +1,15 @@
+# Python
+*.pyc
+*.pyo
+__pycache__/
+.pytest_cache/
+venv/
+.venv/
+env/
+*.log
+
+.vscode/
+
+.env
+
+.coverage
